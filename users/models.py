@@ -22,7 +22,7 @@ class CustomUser(AbstractUser, BaseModel):
         return self.email
 
 class UserProfile(BaseModel):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profiles')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
