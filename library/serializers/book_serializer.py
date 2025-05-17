@@ -41,3 +41,13 @@ class BookSerializer(serializers.ModelSerializer):
         data['authors'] = BookAuthorSerializer(instance.authors.all(), many=True).data
         data['genre'] = BookGenreSerializer(instance.genre).data
         return data
+
+
+class AuthorBookSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(read_only=True)
+    isbn = serializers.CharField(read_only=True)
+    published_date = serializers.DateField(read_only=True)
+    copies_available = serializers.IntegerField(read_only=True)
+
+
