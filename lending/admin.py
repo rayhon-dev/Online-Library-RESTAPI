@@ -14,5 +14,10 @@ class BookLendingAdmin(admin.ModelAdmin):
 class BookReservationAdmin(admin.ModelAdmin):
     list_display = ('reserver_name', 'book_copy', 'reserved_at', 'expires_at', 'is_active')
     list_filter = ('is_active', 'reserved_at', 'expires_at')
-    search_fields = ('reserver_name', 'reserver_email', 'book_copy__book__title')
+    search_fields = ('reserver__username', 'reserver__email', 'book_copy__book__title')
     ordering = ('-reserved_at',)
+
+    def reserver_name(self, obj):
+        return obj.reserver.username
+    reserver_name.short_description = 'Reserver Name'
+
