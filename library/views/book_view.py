@@ -13,6 +13,8 @@ from datetime import timedelta
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from library.filters import BookFilter
+from django.db import models
+
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -22,6 +24,11 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [BookPermission]
     filter_backends = [DjangoFilterBackend]
     filterset_class = BookFilter
+
+    def get_queryset(self):
+        return Book.objects.prefetch_related('authors').select_related('genre').annotate(
+            copies_count=models.Count('book_copies')
+        )
 
     @action(detail=True, methods=['post'], url_path='rate', permission_classes=[IsAuthenticated])
     def rate(self, request, pk=None):

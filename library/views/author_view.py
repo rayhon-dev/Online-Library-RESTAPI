@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from django.db import models
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from library.models import Author, Book
@@ -16,6 +17,9 @@ class AuthorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = AuthorFilter
+
+    def get_queryset(self):
+        return Author.objects.annotate(books_count=models.Count('books'))
 
     @action(detail=True, methods=['get'], pagination_class=AuthorBookPagination)
     def books(self, request, pk=None):
