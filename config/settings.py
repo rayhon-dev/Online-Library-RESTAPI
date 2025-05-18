@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4gum^68%ji$w(kes2@i%d9)n+iebw_7ma-hevhx+7#6#=^4xzf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', 'midnight-pages.uz']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', 'online-library.midnight-pages.uz']
 
 
 # Application definition
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.app'
 
 
 # Database
