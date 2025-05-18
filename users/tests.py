@@ -82,10 +82,8 @@ def test_get_user_list_regular_user_forbidden(api_client, regular_user):
 def test_user_profile_detail_and_update(api_client, regular_user):
     url = reverse('user-profile', args=[regular_user.username])
     api_client.force_authenticate(user=regular_user)
-    # GET profile
     response = api_client.get(url)
     assert response.status_code == 200
-    # PATCH profile
     data = {'bio': 'Updated bio'}
     response = api_client.patch(url, data)
     assert response.status_code == 200
@@ -109,7 +107,6 @@ def test_user_profile_list_for_regular_user_forbidden(api_client, regular_user):
 def test_logout(api_client, regular_user):
     url = reverse('logout')
     api_client.force_authenticate(user=regular_user)
-    # avval token olamiz
     login_url = reverse('token_obtain_pair')
     login_data = {'email': regular_user.email, 'password': 'pass123'}
     login_resp = api_client.post(login_url, login_data)

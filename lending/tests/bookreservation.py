@@ -83,7 +83,6 @@ def test_bookreservation_list_as_regular_user(api_client, regular_user, book_res
     url = reverse('book_reservation-list')
     response = api_client.get(url)
     assert response.status_code == 200
-    # Faqat o'zining reservationlarini ko'radi
     for item in response.data['results']:
         assert item['reserver'] == regular_user.id
 
@@ -102,7 +101,6 @@ def test_create_bookreservation_as_regular_user(api_client, regular_user, bookco
 
 @pytest.mark.django_db
 def test_overdue_list_as_admin(api_client, admin_user, book_reservation):
-    # Reservationni expired holatiga o'tkazish uchun expires_at o'tgan qilish
     book_reservation.expires_at = timezone.now() - timezone.timedelta(days=1)
     book_reservation.save()
     api_client.force_authenticate(user=admin_user)

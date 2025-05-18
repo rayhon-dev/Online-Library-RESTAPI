@@ -87,7 +87,6 @@ def test_booklending_list_as_regular_user(api_client, regular_user, book_lending
     url = reverse('book_lending-list')
     response = api_client.get(url)
     assert response.status_code == 200
-    # Faqat o'zining lendinglarini ko'radi
     for item in response.data['results']:
         assert item['borrower'] == regular_user.id
 
@@ -101,7 +100,7 @@ def test_create_booklending_as_regular_user(api_client, regular_user, bookcopy):
         'due_date': (timezone.now() + timezone.timedelta(days=7)).isoformat(),
         'daily_price': '1.00',
         'status': 'active',
-        'borrower': regular_user.id,  # Qo'shildi
+        'borrower': regular_user.id,
     }
 
     response = api_client.post(url, data)
@@ -125,7 +124,6 @@ def test_return_book_action(api_client, regular_user, book_lending):
 
 @pytest.mark.django_db
 def test_overdue_list_as_admin(api_client, admin_user, book_lending):
-    # Lendingni overdue holatiga o'tkazish uchun due_date o'tgan qilish
     book_lending.due_date = timezone.now() - timezone.timedelta(days=1)
     book_lending.save()
     api_client.force_authenticate(user=admin_user)

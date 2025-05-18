@@ -18,7 +18,7 @@ def admin_user(db):
         username='admin',
         email='admin@test.com',
         password='pass123',
-        role='admin'  # Agar `role` bo‘yicha ruxsatlar bo‘lsa
+        role='admin'
     )
 
 

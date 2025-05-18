@@ -68,7 +68,7 @@ def bookcopy(db, book):
 @pytest.mark.django_db
 def test_bookcopy_list(api_client, regular_user, bookcopy):
     api_client.force_authenticate(user=regular_user)
-    url = reverse('book_copy-list')  # router.register basename='book_copy' bo‘lsa
+    url = reverse('book_copy-list')
     response = api_client.get(url)
     assert response.status_code == 200
     assert len(response.data['results']) == 1
