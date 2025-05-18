@@ -16,24 +16,19 @@ class BookGenreSerializer(serializers.Serializer):
 
 class BookSerializer(serializers.ModelSerializer):
     copies_available = serializers.SerializerMethodField()
+    authors = BookAuthorSerializer(many=True, read_only=True)  # Nested serializer
+    genre = BookGenreSerializer(read_only=True)  # Nested serializer
 
     class Meta:
         model = Book
         fields = [
-            'id',
-            'title',
-            'authors',
-            'genre',
-            'isbn',
-            'published_date',
-            'description',
-            'page_count',
-            'language',
-            'copies_available'
-
+            'id', 'title', 'authors', 'genre', 'isbn', 'published_date',
+            'description', 'page_count', 'language', 'copies_available'
         ]
 
     def get_copies_available(self, obj):
+        if hasattr(obj, 'copies_count'):
+            return obj.copies_count
         return obj.book_copies.count()
 
     def to_representation(self, instance):

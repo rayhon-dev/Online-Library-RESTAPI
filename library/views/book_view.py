@@ -74,6 +74,6 @@ class BookViewSet(viewsets.ModelViewSet):
         available_copies = BookCopy.objects.filter(book=book).exclude(
             book_reservations__is_active=True,
             book_reservations__expires_at__gt=timezone.now()
-        )
+        ).select_related('book')
         serializer = BookCopySerializer(available_copies, many=True)
         return Response(serializer.data)

@@ -9,20 +9,18 @@ from core.permissions import IsAdminOrOperator, IsOwnerOrReadOnly
 from django.utils import timezone
 
 
-
 class BookLendingViewSet(viewsets.ModelViewSet):
-    queryset = BookLending.objects.all()
     serializer_class = BookLendingSerializer
     pagination_class = BookLendingPagination
-
-    def perform_create(self, serializer):
-        serializer.save(borrower=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
         if user.role in ['admin', 'operator']:
-            return BookLending.objects.all()
-        return BookLending.objects.filter(borrower=user)
+            return BookLending.objects.select_related('book_copy', 'book_copy__book', 'borrower').all()
+        return BookLending.objects.select_related('book_copy', 'book_copy__book', 'borrower').filter(borrower=user)
+
+    def perform_create(self, serializer):
+        serializer.save(borrower=self.request.user)
 
     def get_permissions(self):
         if self.action == 'overdue':
@@ -35,10 +33,9 @@ class BookLendingViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsOwnerOrReadOnly()]
         return [IsAuthenticated()]
 
-
     @action(detail=False, methods=['get'], url_path='overdue')
     def overdue(self, request):
-        queryset = BookLending.objects.filter(status='overdue')
+        queryset = BookLending.objects.select_related('book_copy').filter(status='overdue')
         page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(page, many=True) if page is not None else self.get_serializer(queryset, many=True)
         return self.get_paginated_response(serializer.data) if page is not None else Response(serializer.data)
@@ -47,7 +44,7 @@ class BookLendingViewSet(viewsets.ModelViewSet):
     def return_book(self, request):
         lending_id = request.data.get('lending_id')
         try:
-            lending = BookLending.objects.get(id=lending_id, borrower=request.user, status='active')
+            lending = BookLending.objects.select_related('book_copy').get(id=lending_id, borrower=request.user, status='active')
         except BookLending.DoesNotExist:
             return Response({"error": "Active lending not found."}, status=status.HTTP_404_NOT_FOUND)
 
