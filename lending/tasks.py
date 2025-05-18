@@ -6,23 +6,24 @@ from decimal import Decimal
 @shared_task
 def expire_reservations():
     now = timezone.now()
-    reservations = BookReservation.objects.filter(is_active=True, expires_at__lt=now)
-    for res in reservations:
-        res.is_active = False
-        res.save()
+    BookReservation.objects.filter(is_active=True, expires_at__lt=now).update(is_active=False)
+
 
 @shared_task
 def update_overdue_lendings():
     now = timezone.now()
     lendings = BookLending.objects.filter(status='active', due_date__lt=now)
+
+    updated_lendings = []
     for lending in lendings:
-        lending.status = 'overdue'
-        # jarimani hisoblash
         days_overdue = (now - lending.due_date).days
         if days_overdue > 0:
-            penalty_rate = Decimal('0.01')
-            lending.penalty_amount = lending.daily_price * penalty_rate * days_overdue
-        lending.save()
+            lending.status = 'overdue'
+            lending.penalty_amount = lending.daily_price * Decimal('0.01') * days_overdue
+            updated_lendings.append(lending)
+
+    if updated_lendings:
+        BookLending.objects.bulk_update(updated_lendings, ['status', 'penalty_amount'])
 
 
 if __name__ == "__main__":
