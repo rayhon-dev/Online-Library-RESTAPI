@@ -39,23 +39,27 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.borrower == request.user or request.method in permissions.SAFE_METHODS
 
+
 class BookPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         if not user.is_authenticated:
             return False
+
         if user.role == 'admin':
             return True
+
         if user.role == 'operator':
             return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+
         if user.role == 'user':
             if request.method in permissions.SAFE_METHODS:
                 return True
             if hasattr(view, 'action') and view.action in ['reserve', 'rate']:
-                return True
+                return request.method in ['POST', 'PUT', 'PATCH']
             return False
-        return False
 
+        return False
 
 
 class BookCopyPermission(permissions.BasePermission):

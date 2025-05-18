@@ -8,6 +8,3 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'user', 'book', 'rating', 'review']
-        extra_kwargs = {
-            'rating': {'min_value': 0, 'max_value': 5}
-        }

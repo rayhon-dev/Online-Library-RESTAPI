@@ -5,6 +5,9 @@ from library.models import Genre, Book
 from library.serializers import GenreSerializer, AuthorBookSerializer
 from library.pagination import GenrePagination, GenreBookPagination
 from core.permissions import GenrePermission
+from django_filters.rest_framework import DjangoFilterBackend
+from library.filters import GenreFilter
+
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -12,6 +15,8 @@ class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     pagination_class = GenrePagination
     permission_classes = [GenrePermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = GenreFilter
 
 
     @action(detail=True, methods=['get'], url_path='books', pagination_class=GenreBookPagination)

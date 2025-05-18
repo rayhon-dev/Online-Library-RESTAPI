@@ -15,6 +15,9 @@ class BookLendingViewSet(viewsets.ModelViewSet):
     serializer_class = BookLendingSerializer
     pagination_class = BookLendingPagination
 
+    def perform_create(self, serializer):
+        serializer.save(borrower=self.request.user)
+
     def get_queryset(self):
         user = self.request.user
         if user.role in ['admin', 'operator']:

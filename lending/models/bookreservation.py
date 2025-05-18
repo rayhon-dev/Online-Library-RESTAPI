@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 class BookReservation(BaseModel):
-    book_copy = models.ForeignKey(BookCopy, on_delete=models.CASCADE)
+    book_copy = models.ForeignKey(BookCopy, on_delete=models.CASCADE, related_name='book_reservations')
     reserver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='book_reservations')
     reserved_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()

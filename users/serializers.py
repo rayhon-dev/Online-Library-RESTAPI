@@ -38,7 +38,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             'password',
             'password2',
             'first_name',
-            'last_name'
+            'last_name',
+            'role'
         ]
 
     def validate(self, attrs):

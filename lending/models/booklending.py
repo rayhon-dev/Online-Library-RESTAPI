@@ -26,24 +26,23 @@ class BookLending(BaseModel):
     def __str__(self):
         return f"{self.borrower.email} - {self.book_copy.book.title if self.book_copy and self.book_copy.book else 'No Book'}"
 
-
     def calculate_penalty(self):
         if self.status == 'overdue' and self.due_date and not self.returned_date:
             days_overdue = (timezone.now() - self.due_date).days
             if days_overdue > 0:
                 penalty_rate = Decimal('0.01')  # 1%
                 penalty = self.daily_price * penalty_rate * days_overdue
-                self.penalty_amount = penalty
-                self.save()
                 return penalty
         return Decimal('0')
 
     def save(self, *args, **kwargs):
         if self.returned_date:
             self.status = 'returned'
+            self.penalty_amount = Decimal('0')  # qaytarilgan bo'lsa, jarima yo'q
         elif self.due_date and timezone.now() > self.due_date:
             self.status = 'overdue'
-            self.calculate_penalty()
+            self.penalty_amount = self.calculate_penalty()  # hisoblab olamiz
         else:
             self.status = 'active'
+            self.penalty_amount = Decimal('0')  # faollik davrida jarima yo'q
         super().save(*args, **kwargs)

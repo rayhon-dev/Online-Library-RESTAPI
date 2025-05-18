@@ -11,6 +11,8 @@ from rest_framework.decorators import action
 from rest_framework import status
 from datetime import timedelta
 from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
+from library.filters import BookFilter
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -18,6 +20,8 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     pagination_class = BookPagination
     permission_classes = [BookPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BookFilter
 
     @action(detail=True, methods=['post'], url_path='rate', permission_classes=[IsAuthenticated])
     def rate(self, request, pk=None):

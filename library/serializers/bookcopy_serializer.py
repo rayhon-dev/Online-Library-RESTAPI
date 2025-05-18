@@ -23,6 +23,16 @@ class BookCopySerializer(serializers.ModelSerializer):
             'current_lending'
         ]
 
+    def get_current_lending(self, obj):
+        book_reservation = obj.book_reservations.filter(is_active=True).order_by('-reserved_at').first()
+        if book_reservation:
+            return {
+                'id': book_reservation.id,
+                'reserver': book_reservation.reserver.username,
+                'expires_at': book_reservation.expires_at,
+            }
+        return None
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['book'] = BookShortSerializer(instance.book).data
