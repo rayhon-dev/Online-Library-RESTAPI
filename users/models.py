@@ -23,7 +23,7 @@ class CustomUser(AbstractUser, BaseModel):
 
 class UserProfile(BaseModel):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(max_length=200, blank=True, null=True)
+    bio = models.TextField(max_length=200, blank=True)
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):

@@ -4,12 +4,15 @@ from rest_framework.response import Response
 from library.models import Genre, Book
 from library.serializers import GenreSerializer, AuthorBookSerializer
 from library.pagination import GenrePagination, GenreBookPagination
+from core.permissions import GenrePermission
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     pagination_class = GenrePagination
+    permission_classes = [GenrePermission]
+
 
     @action(detail=True, methods=['get'], url_path='books', pagination_class=GenreBookPagination)
     def books(self, request, pk=None):

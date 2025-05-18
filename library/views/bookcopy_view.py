@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from library.models import BookCopy
 from library.serializers import BookCopySerializer
 from library.pagination import BookCopyPagination
+from core.permissions import BookCopyPermission
 
 
 class BookCopyViewSet(viewsets.ModelViewSet):
     queryset = BookCopy.objects.all()
     serializer_class = BookCopySerializer
     pagination_class = BookCopyPagination
+    permission_classes = [BookCopyPermission]
 
     @action(detail=False, methods=['get'], url_path='available')
     def available(self, request):

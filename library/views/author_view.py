@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from library.models import Author, Book
 from library.serializers import AuthorSerializer, AuthorBookSerializer
 from library.pagination import AuthorPagination, AuthorBookPagination
+from core.permissions import IsAdminOrReadOnly
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     pagination_class = AuthorPagination
+    permission_classes = [IsAdminOrReadOnly]
 
     @action(detail=True, methods=['get'], pagination_class=AuthorBookPagination)
     def books(self, request, pk=None):

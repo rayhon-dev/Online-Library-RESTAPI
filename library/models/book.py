@@ -15,3 +15,10 @@ class Book(BaseModel):
 
     def __str__(self):
         return self.title
+
+    @property
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            return round(sum(r.rating for r in ratings) / ratings.count(), 1)
+        return 0
