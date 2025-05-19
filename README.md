@@ -78,7 +78,7 @@ Ushbu API kitoblar, mualliflar, janrlar, nusxalar, qarzga berish, rezervatsiya v
 
 - Django REST Framework  
 - Django Filters  
-- PostgreSQL (yoki boshqa DB)  
+- PostgreSQL 
 - Python 3.x
 
 ---
